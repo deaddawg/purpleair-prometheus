@@ -1,17 +1,14 @@
 import argparse
 import logging
 import requests
-import json
 import sys
 import time
-from socket import getfqdn
 
 from prometheus_client.core import GaugeMetricFamily, REGISTRY
 from prometheus_client import start_http_server
 
 
 DEFAULT_PORT = 7884
-HOSTNAME = getfqdn()
 LOG = logging.getLogger(__name__)
 
 
