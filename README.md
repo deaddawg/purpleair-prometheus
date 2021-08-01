@@ -23,3 +23,9 @@ For example,
 ```
 $ python3 purple-prom.py -s 192.168.1.98 192.168.1.99
 ```
+
+## Docker usage
+
+```
+docker run -it -e SENSORS="192.168.1.98 192.168.1.99" -e EXTRA_OPTS="-d" -p 7884:7884 deaddawg/purple-prom:latest
+```
