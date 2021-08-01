@@ -4,6 +4,8 @@ import requests
 import sys
 import time
 
+from requests.exceptions import RequestException
+
 from prometheus_client.core import GaugeMetricFamily, REGISTRY
 from prometheus_client import start_http_server
 
@@ -63,14 +65,20 @@ class PurpleAirCollector:
         raw_data = {}
         for sensor in self.sensors:
             url = f"http://{sensor}/json"
-            resp = requests.get(url=url)
+            try:
+                resp = requests.get(url=url)
+            except RequestException as e:
+                LOG.error(f"Could not connect to {sensor}, skipping")
+                LOG.debug(f"Connection error: {e}")
+                # reset data for sensor so prometheus does not collect stale data
+                raw_data.pop(sensor, None)
+                continue
             LOG.info(f"Collected from {url}")
             parsed_resp = resp.json()
             raw_data[sensor] = parsed_resp
 
-        return self._build_metrics(raw_data)        
-
         LOG.debug("Collection complete")
+        return self._build_metrics(raw_data) 
 
 
 def _handle_debug(debug):
