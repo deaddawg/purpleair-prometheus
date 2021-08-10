@@ -44,10 +44,10 @@ class PurpleAirCollector:
         for sensor, resp in raw_data.items():
              sensor_id = resp.get("SensorId")
              a = resp.get(stat)
-             if a:
+             if a is not None:
                  g.add_metric([sensor_id, "a"], a)
              b = resp.get(f"{stat}_b")
-             if b:
+             if b is not None:
                  g.add_metric([sensor_id, "b"], b)
 
     def _build_metrics(self, raw_data):
